@@ -32,7 +32,7 @@ export default class TodosAccess {
         const createResult = await this.docClient.put({
             TableName: this.todosTable,
             Item: todoItem,
-            ReturnValues: "ALL_NEW"
+            ReturnValues: "ALL_OLD"
         }).promise();
         logger.info("todo created successfully", createResult);
         return createResult;

@@ -110,6 +110,20 @@ export function Todos() {
     }
   }
 
+  //add more
+  async function reloadTodos() {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://dev-4pcnrsfwj1wtoofa.us.auth0.com/api/v2/`,
+        scope: 'read:todos'
+      })
+      const todos = await getTodos(accessToken)
+      setTodos(todos)
+    } catch (e) {
+      alert('Failed to reload todos')
+    }
+  }
+
   function onEditButtonClick(todoId) {
     navigate(`/todos/${todoId}/edit`)
   }
@@ -150,7 +164,7 @@ export function Todos() {
     <div>
       <Header as="h1">TODOs</Header>
 
-      <NewTodoInput onNewTodo={(newTodo) => setTodos([...todos, newTodo])} />
+      <NewTodoInput onNewTodo={(newTodo) => setTodos([...todos, newTodo])} onReloadTodos={reloadTodos}/>
 
       {renderTodos(loadingTodos, todos)}
     </div>
