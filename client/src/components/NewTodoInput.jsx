@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Divider, Grid, Input } from 'semantic-ui-react'
 import { createTodo } from '../api/todos-api'
 
-export function NewTodoInput({ onNewTodo }) {
+export function NewTodoInput({ onNewTodo, onReloadTodos }) {
   const [newTodoName, setNewTodoName] = useState('')
 
   const { getAccessTokenSilently } = useAuth0()
@@ -21,6 +21,8 @@ export function NewTodoInput({ onNewTodo }) {
         dueDate
       })
       onNewTodo(createdTodo)
+      onReloadTodos()
+      alert("created successfully! ")
     } catch (e) {
       console.log('Failed to created a new TODO', e)
       alert('Home to go to list');
