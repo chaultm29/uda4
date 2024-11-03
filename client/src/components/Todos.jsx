@@ -30,24 +30,24 @@ export function Todos() {
       <Grid padded>
         {todos.map((todo, pos) => {
           return (
-            <Grid.Row key={todo.todoId}>
+            <Grid.Row key={todo?.todoId}>
               <Grid.Column width={1} verticalAlign="middle">
                 <Checkbox
                   onChange={() => onTodoCheck(pos)}
-                  checked={todo.done}
+                  checked={todo?.done===true}
                 />
               </Grid.Column>
               <Grid.Column width={10} verticalAlign="middle">
-                {todo.name}
+                {todo?.name}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
-                {todo.dueDate}
+                {todo?.dueDate}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
                   icon
                   color="blue"
-                  onClick={() => onEditButtonClick(todo.todoId)}
+                  onClick={() => onEditButtonClick(todo?.todoId)}
                 >
                   <Icon name="pencil" />
                 </Button>
@@ -56,13 +56,13 @@ export function Todos() {
                 <Button
                   icon
                   color="red"
-                  onClick={() => onTodoDelete(todo.todoId)}
+                  onClick={() => onTodoDelete(todo?.todoId)}
                 >
                   <Icon name="delete" />
                 </Button>
               </Grid.Column>
-              {todo.attachmentUrl && (
-                <Image src={todo.attachmentUrl} size="small" wrapped />
+              {todo?.attachmentUrl && (
+                <Image src={todo?.attachmentUrl} size="small" wrapped />
               )}
               <Grid.Column width={16}>
                 <Divider />
@@ -77,11 +77,11 @@ export function Todos() {
   async function onTodoDelete(todoId) {
     try {
       const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
+        audience: `https://dev-4pcnrsfwj1wtoofa.us.auth0.com/api/v2/`,
         scope: 'delete:todo'
       })
       await deleteTodo(accessToken, todoId)
-      setTodos(todos.filter((todo) => todo.todoId !== todoId))
+      setTodos(todos.filter((todo) => todo?.todoId !== todoId))
     } catch (e) {
       alert('Todo deletion failed')
     }
@@ -91,10 +91,10 @@ export function Todos() {
     try {
       const todo = todos[pos]
       const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
+        audience: `https://dev-4pcnrsfwj1wtoofa.us.auth0.com/api/v2/`,
         scope: 'write:todo'
       })
-      await patchTodo(accessToken, todo.todoId, {
+      await patchTodo(accessToken, todo?.todoId, {
         name: todo.name,
         dueDate: todo.dueDate,
         done: !todo.done
@@ -117,6 +117,7 @@ export function Todos() {
   const { user, getAccessTokenSilently } = useAuth0()
   const [todos, setTodos] = useState([])
   const [loadingTodos, setLoadingTodos] = useState(true)
+  // const [isRetrying, setIsRetrying] = useState(false)
   const navigate = useNavigate()
 
   console.log('User', {
@@ -128,15 +129,18 @@ export function Todos() {
     async function foo() {
       try {
         const accessToken = await getAccessTokenSilently({
-          audience: `https://test-endpoint.auth0.com/api/v2/`,
+          audience: `https://dev-4pcnrsfwj1wtoofa.us.auth0.com/api/v2/`,
           scope: 'read:todos'
         })
         console.log('Access token: ' + accessToken)
         const todos = await getTodos(accessToken)
         setTodos(todos)
         setLoadingTodos(false)
+        // if (todos.some((todo) => !todo.attachmentUrl) && !isRetrying) {
+        //   setIsRetrying(true)
+        // }
       } catch (e) {
-        alert(`Failed to fetch todos: ${e.message}`)
+        alert(`Please reload page to update new record`)
       }
     }
     foo()
