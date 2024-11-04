@@ -25,7 +25,7 @@ export function NewTodoInput({ onNewTodo, onReloadTodos }) {
       alert("created successfully! ")
     } catch (e) {
       console.log('Failed to created a new TODO', e)
-      alert('Home to go to list');
+      alert('Please input task! (max:200)');
       // alert(`Todo creation failed: ${e.message || e}`);
     }
   }
